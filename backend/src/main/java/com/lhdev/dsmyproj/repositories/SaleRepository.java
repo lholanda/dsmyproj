@@ -13,6 +13,7 @@ import com.lhdev.dsmyproj.entities.Sale;
 @Repository
 public interface SaleRepository extends JpaRepository<Sale, Long> {
 
+	// pesquisa no BD com @Query - JPQL
 	@Query("SELECT obj FROM Sale obj WHERE obj.date BETWEEN :min AND :max ORDER BY obj.amount DESC")
 	Page<Sale> findSales(LocalDate min, LocalDate max, Pageable pageable);
 	
