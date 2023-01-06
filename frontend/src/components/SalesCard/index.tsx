@@ -1,4 +1,5 @@
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -6,6 +7,9 @@ import NotificationButton from "../NotificationButton";
 import "./styles.css";
 
 function SalesCard() {
+
+  // reactHook - useState and useEffect 
+  // qdo mudar um determinado dado, executa a funcao
   
   const min = new Date(new Date().setDate(new Date().getDate() - 365));
   const max = new Date();
@@ -13,6 +17,14 @@ function SalesCard() {
   // declarar um dado e uma funcao que altera este dado minState and setMinDate
   const [minDate, setMinDate] = useState(min);
   const [maxDate, setMaxDate] = useState(max);
+
+  // fduncao e lista de dependencia
+  useEffect(()=>{
+    axios.get("http://localhost:8080/sales").
+    then(response => {
+      console.log(response.data)
+    });
+  }, []);
 
   return (
     <div className="dsmeta-card">
@@ -22,7 +34,7 @@ function SalesCard() {
           <DatePicker
             selected={minDate}
             // para alterar o estado das datas dentro do Datepicker
-            onChange={(date: Date) => setMinDate(date)}
+            onChange={(date: Date) => setMinDate(date) }
             className="dsmeta-form-control"
             dateFormat="dd/MM/yyyy"
           />
