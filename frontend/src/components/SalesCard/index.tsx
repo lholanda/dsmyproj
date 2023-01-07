@@ -22,15 +22,23 @@ function SalesCard() {
 
   const [sales, setSales] = useState<Sale[]>([]);
 
+  const [myString, setMyString] = useState("abracadabra".slice(0,2));
+  
+  
   // funcao e lista de dependencia
   useEffect(()=>{
-    axios.get(`${ BASE_URL }/sales`).
+    const dtMin = minDate.toISOString().slice(0,10);
+    const dtMax = maxDate.toISOString().slice(0,10);
+
+    axios.get(`${ BASE_URL }/sales?minDate=${dtMin}&maxDate=${dtMax}`).
     then(response => {
-      //console.log(response.data.content)
       setSales(response.data.content)
     });
-  }, []);
+  }, [minDate, maxDate]);
+  // para useEffect atualizar o minDate e maxDate, colocar entre colchetes [minDate, maxDate]
 
+
+  // este é o return da funcao SalesCard()
   return (
     <div className="dsmeta-card">
       <h2 className="dsmeta-sales-title">Vendas</h2>
@@ -53,7 +61,6 @@ function SalesCard() {
           />
         </div>
       </div>
-
       <div>
         <table className="dsmeta-sales-table">
           <thead>
@@ -67,33 +74,28 @@ function SalesCard() {
               <th>Notificar</th>
             </tr>
           </thead>
-          <tbody>
 
-            
-            
-            { sales.map(sale => { 
+          <tbody>        
+            {sales.map(sale => { 
               // iteracao para cada valor de sale
-              var dateFormated = new Date(sale.date).toUTCString();
-              dateFormated = new Date(sale.date).toLocaleString();
-              dateFormated = new Date(sale.date).toDateString();
-              dateFormated = new Date(sale.date).toLocaleDateString();
+              var formatedDate = new Date(sale.date).toLocaleDateString();
               return (
+                
                 <tr key={sale.id}>    
                   <td className="show992">{sale.id}</td>
-                  <td className="show576">{dateFormated}</td>
+                  <td className="show576">{formatedDate}</td>
                   <td>{sale.sellerName}</td>
                   <td className="show992">{sale.visited}</td>
                   <td className="show992">{sale.deals}</td>
                   <td>R$ {sale.amount.toFixed(2)}</td>
                   <td>
                     <div className="dsmeta-red-btn-container">
-                      <NotificationButton />
+                      <NotificationButton saleId={sale.id} saleName={sale.sellerName} teste={sale.id+100}/>
                     </div>
                   </td>
                 </tr>
               )
              })}
-
 
           </tbody>
         </table>
